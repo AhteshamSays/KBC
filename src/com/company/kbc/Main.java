@@ -34,7 +34,15 @@ public class Main {
 
     private static int stage, final_amount, playing_amount;
 
-    private static String key;
+    private static int choice, lifeLine, correct;
+
+    private static int double_dip = 0;
+    private static int double_dip1 = 0;
+    private static int phone_of_friend = 0;
+    private static int expert_advice = 0;
+    private static int audience_poll = 0;
+
+    private static String key, option;
 
 
     public static void main(String[] args) throws IOException {
@@ -90,8 +98,165 @@ public class Main {
     }
 
     private static void gamePlayService() throws IOException {
-
+        System.out.print("\n Enter you choice: ");
+        option = br.readLine();
+        if (option.charAt(0) == 'A' || option.charAt(0) == 'a'){
+            choice = 1;
+        } else if (option.charAt(0) == 'B' || option.charAt(0) == 'b') {
+            choice = 2;
+        } else if (option.charAt(0) == 'C' || option.charAt(0) == 'c') {
+            choice = 3;
+        } else if (option.charAt(0) == 'D' || option.charAt(0) == 'd') {
+            choice = 4;
+        } else if (option.charAt(0) == 'L' || option.charAt(0) == 'l') {
+            selectLifeLine();
+            if (double_dip1 == 0){
+                gamePlayService();
+            }
+            double_dip1=0;
+        } else if (option.charAt(0) == 'Q' || option.charAt(0) == 'q') {
+            quit();
+        } else {
+            System.out.print("\n Invalid Choice... \n Try Again...");
+            gamePlayService();
+        }
     }
+
+    private static void selectLifeLine() throws IOException {
+        int i;
+        System.out.print("\n You have following lifeline: ");
+        for (i=0;i<LIFE_LINE.length;i++){
+            System.out.print("\n" + LIFE_LINE[i]);
+        }
+        System.out.print("Which one would you like to use: ");
+        lifeLine = Integer.parseInt(br.readLine());
+        switch (lifeLine) {
+            // Audience Poll
+            case 1:
+                setAudience_poll();
+                break;
+            // Phone of Friends
+            case 2:
+                setPhone_of_friend();
+                break;
+            // Double Dip
+            case 3:
+                setDouble_dip();
+                break;
+            // Expert Advice
+            case 4:
+                setExpert_advice();
+                break;
+            default:
+                System.out.print("\n Invalid Choice");
+        }
+    }
+
+    private static void setAudience_poll() {
+        audience_poll++;
+        int[] a = new int[3];
+        int s=0, i, j, c;
+        LIFE_LINE[0] = "";
+        for (i=0;i<=2;i++){
+            // Randomly select any three number;
+            c=random.nextInt(15);
+            a[i] = c;
+        }
+
+        // s is difference between 100 and sum of a array.
+        s = 100 - (a[0]+a[1]+a[2]);
+        System.out.print(" \n Waiting.... \n");
+
+        if (correct == 1) {
+            System.out.print("\n A. " + s + "%");
+            System.out.print("\n B. " + a[0] + "%");
+            System.out.print("\n C. " + a[1] + "%");
+            System.out.print("\n D. " + a[2] + "%");
+        }
+        if(correct==2)
+        {
+            System.out.print("\n A. " + a[0] + " %");
+            System.out.print("\n B. " + s + " %");
+            System.out.print("\n C. " + a[1] + " %");
+            System.out.print("\n D. " + a[2] + " %");
+        }
+        if(correct==3)
+        {
+            System.out.print("\n A. " + a[1] + " %");
+            System.out.print("\n B. " + a[0] + " %");
+            System.out.print("\n C. " + s + " %");
+            System.out.print("\n D. " + a[2] + " %");
+        }
+        if(correct==4)
+        {
+            System.out.print("\n A. " + a[2] + " %");
+            System.out.print("\n B. " + a[0] + " %");
+            System.out.print("\n C. " + a[1] + " %");
+            System.out.print("\n D. "+ s + " %");
+        }
+    }
+
+    private static void setPhone_of_friend() {
+        phone_of_friend++;
+
+        int c = random.nextInt(5);
+        System.out.print("\n");
+        LIFE_LINE[1] = "";
+        if (c==1 || c==2 || c==5 || c==4) {
+            if (correct == 1) {
+                System.out.print("Friend says it is \'A\' ");
+            }
+            if (correct == 2) {
+                System.out.print("Friend says it is \'B\' ");
+            }
+            if (correct == 3) {
+                System.out.print("Friend says it is \'C\' ");
+            }
+            if (correct == 4) {
+                System.out.print("Friend says it is \'D\' ");
+            }
+        } else {
+            System.out.print("Friend says, \" I have no idea \"" );
+        }
+    }
+
+    private static void setDouble_dip() throws IOException {
+        double_dip1 = 1;
+        LIFE_LINE[2] = "";
+        double_dip++;
+        System.out.print("\n First choice: ");
+        gamePlayService();
+        if (correct == choice) {
+            System.out.print("\n Correct answer");
+        } else {
+            System.out.print("\n Wrong answer. \n \n Second choice: ");
+            gamePlayService();
+        }
+    }
+
+    private static void setExpert_advice() throws IOException{
+        expert_advice++;
+        int c = random.nextInt(5);
+        System.out.print("\n");
+        LIFE_LINE[3] = "";
+        if (c==1 || c==2 || c==5 || c==4) {
+            if (correct == 1) {
+                System.out.print("Expert think it is \'A\' ");
+            }
+            if (correct == 2) {
+                System.out.print("Expert think it is \'B\' ");
+            }
+            if (correct == 3) {
+                System.out.print("Expert think it is \'C\' ");
+            }
+            if (correct == 4) {
+                System.out.print("Expert think it is \'D\' ");
+            }
+        } else {
+            System.out.print("Expert has no idea" );
+        }
+    }
+
 
     private static void quit(){
         final_amount = playing_amount;
