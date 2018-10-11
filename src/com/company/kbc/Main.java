@@ -74,7 +74,7 @@ public class Main {
 
     private static void stageSelection() throws IOException {
         String s;
-        System.out.print("\n Please select a stage (Enter the amount) : ");
+        System.out.print("\n Please select a stage (Enter the stage) : ");
         stage = Integer.parseInt(br.readLine());
         if (stage>=1 && stage<=14) {
             System.out.print("\n You have selected: " + stage+ "\t --> Rs. "+ PRICE[stage-1]);
@@ -121,13 +121,59 @@ public class Main {
         }
     }
 
+    /**
+     * This method store all question & answer for this game.
+     * It is responsible for storing and serving randomly selected questions.
+     */
+    private static void storage() throws IOException {
+
+        String[][] question = {{"Question number one is that.", "\n\n A.Option 1\t\t B.Option 2\nC.Option 3\t\tD.Option 4"},
+                {"Question number two is that.", "\n\n A.Option 1\t\t B.Option 2\nC.Option 3\t\tD.Option 4"},
+                {"Question number three is that.", "\n\n A.Option 1\t\t B.Option 2\nC.Option 3\t\tD.Option 4"},
+                {"Question number four is that.", "\n\n A.Option 1\t\t B.Option 2\nC.Option 3\t\tD.Option 4"},
+                {"Question number five is that.", "\n\n A.Option 1\t\t B.Option 2\nC.Option 3\t\tD.Option 4"},
+                {"Question number six is that.", "\n\n A.Option 1\t\t B.Option 2\nC.Option 3\t\tD.Option 4"},
+                {"Question number seven is that.", "\n\n A.Option 1\t\t B.Option 2\nC.Option 3\t\tD.Option 4"}};
+
+        String[] correct_answer = {"A","B","C","D","A","B","C"};
+
+        int[] answer = {1,2,3,4,1,2,3};
+
+        int rnd[] = randomNum(1,7);
+        int count = 1;
+        for (int i=0; i<answer.length; i++){
+            int j = rnd[i];
+            System.out.print("Stage : "+count+"\t--->\t"+PRICE[count-1]+"\n\n");
+            System.out.print("\n" + question[j][0]);
+            System.out.print(question[j][1]);
+            correct = answer[j];
+            gamePlayService();
+            if (correct == choice){
+                playing_amount = PRICE[count-1];
+                System.out.print("\nWell done. Correct answer.");
+                if (stage == count){
+                    final_amount = playing_amount;
+                    System.out.print("\n\nCongratulations, you have completed your desired stage succesfully");
+                }
+            } else {
+                System.out.print("\nSorry, but this is the wrong answer");
+                System.out.print("\n\nCorrect answer is " + correct_answer[j]);
+                finish();
+            }
+            System.out.print("\n\nEnter any key to continue : ");
+            key = br.readLine();
+            count++;
+        }
+
+    }
+
     private static void selectLifeLine() throws IOException {
         int i;
         System.out.print("\n You have following lifeline: ");
         for (i=0;i<LIFE_LINE.length;i++){
             System.out.print("\n" + LIFE_LINE[i]);
         }
-        System.out.print("Which one would you like to use: ");
+        System.out.print("\n \nWhich one would you like to use: ");
         lifeLine = Integer.parseInt(br.readLine());
         switch (lifeLine) {
             // Audience Poll
@@ -262,6 +308,9 @@ public class Main {
         finish();
     }
 
+    /**
+     *  This method used to close Game and JAVA Service.
+     */
     private static void finish() {
         System.out.print("\n You have won " + final_amount +
                 " Ruppees.");
@@ -270,6 +319,39 @@ public class Main {
         System.out.print("\n Wish you to all the best \n Take care ");
         System.out.print("\n Hope you enjoy the game. ");
         System.exit(0);
+    }
+
+    /**
+     * This method for generates unique random number for
+     * selecting randomly question.
+     * @param from Starting Point of your number.
+     * @param to End point of your number
+     * @return It will return integer type array.
+     */
+    private static int[] randomNum(int from, int to) {
+        // Number of integer need to generate.
+        int n = (to - from) + 1;
+        // Create an array to store all number
+        int a[] = new int[n];
+        for(int i = 0;i<n;i++) {
+            a[i] = i;
+        }
+
+        // Array to store the result.
+        int[] result = new int[n];
+
+        int x =n;
+
+        for (int i =0; i<n; i++) {
+            // It is a random index in [0, x]
+            int k = random.nextInt(x);
+            result[i] = a[k];
+            // We got the value from a[k], it replace by the value from last index.
+            a[k] = a[x-1];
+            // Then we decrease x by 1 to get a random index from 0 to x only.
+            x--;
+        }
+        return result;
     }
 
 }
